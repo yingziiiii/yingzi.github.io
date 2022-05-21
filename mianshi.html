@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面试题 —— 温慧</title>
+    <style>
+        .main {
+            height: 200px;
+            width: 170px;
+            margin: 0 auto;
+        }
+        li {
+            list-style: none;
+            float: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <ul>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+            <li><input type="checkbox"></li>
+        </ul>
+    </div>
+
+    <script>
+        let body = document.body;
+        let inputs = document.getElementsByTagName("input");
+        let initial = {
+            down_x: 0,
+            down_y: 0,
+            move_x: 0,
+            move_y: 0,
+            top: 0,
+            left: 0,
+            width: 0,
+            height: 0
+        };
+        body.addEventListener("mousedown",function(e) {
+            console.log(0);
+            initial.down_x = e.clientX;
+            initial.down_y = e.clientY;
+            body.addEventListener("mousemove",bodyMouseMove);
+            body.addEventListener("mouseup",bodyMouseUp);
+        });
+        function bodyMouseMove(e) {
+            console.log(1);
+            initial.move_x = e.clientX;
+            initial.move_y = e.clientY;
+            //右上
+            if(initial.down_x < initial.move_x && initial.down_y > initial.move_y) {
+                initial.top = initial.move_y;
+                initial.left = initial.down_x;
+                initial.height = initial.down_y - initial.move_y;
+                initial.width = initial.move_x - initial.down_x;
+            }
+            //右下
+            if(initial.down_x < initial.move_x && initial.down_y < initial.move_y) {
+                initial.top = initial.down_y;
+                initial.left = initial.down_x;
+                initial.height = initial.move_y - initial.down_y;
+                initial.width = initial.move_x - initial.down_x;
+            }
+            //左上
+            if(initial.down_x > initial.move_x && initial.down_y > initial.move_y) {
+                initial.top = initial.move_y;
+                initial.left = initial.move_x;
+                initial.height = initial.down_y - initial.move_y;
+                initial.width = initial.down_x - initial.move_x;
+            }
+            //左下
+            if(initial.down_x > initial.move_x && initial.down_y < initial.move_y) {
+                initial.top = initial.down_y;
+                initial.left = initial.move_x;
+                initial.height = initial.move_y - initial.down_y;
+                initial.width = initial.down_x - initial.move_x;
+            }
+            for(let i = 0; i < inputs.length; i++) {
+                console.log(4);
+                inputs[i].checked = false;
+                if(scopeOfJudgment(inputs[i])) {
+                    inputs[i].checked = true;
+                }
+            }
+        };
+        function bodyMouseUp() {
+            console.log(2);
+            initial = {
+                down_x: 0,
+                down_y: 0,
+                move_x: 0,
+                move_y: 0,
+                top: 0,
+                left: 0,
+                width: 0,
+                height: 0
+             };
+            body.removeEventListener("mousemove",bodyMouseMove);
+            body.removeEventListener("mouseup",bodyMouseUp);
+        }
+        function scopeOfJudgment(inp) {
+            return !(inp.offsetTop > initial.top + initial.height ||
+                    inp.offsetLeft > initial.left + initial.width ||
+                    inp.offsetTop + inp.offsetHeight < initial.top ||
+                    inp.offsetLeft + inp.offsetWidth < initial.left)
+        };
+    </script>
+</body>
+</html>
